@@ -1,0 +1,39 @@
+version: '3.9'
+
+networks: 
+    mysql-phpmyadmin:
+        name: mysql-phpmyadmin
+        driver: bridge
+
+services:
+    mysql:
+        image: mysql:latest
+        container_name: serveur_mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: Azerty12345*
+            MYSQL_DATABASE: footpro
+            MYSQL_USER: php
+            MYSQL_PASSWORD: php
+        ports:
+            - "3306:3306"
+        networks:
+          mysql-phpmyadmin:
+            aliases:
+              - mysql
+
+    phpmyadmin:
+        image: phpmyadmin:latest
+        container_name: serveur_phpmyadmin
+        volumes:
+          - ./projet:/var/www/html/projet
+        links:
+            - mysql
+        environment:
+            PMA_HOST: mysql
+            PMA_PORT: 3306
+        ports:
+            - "9995:80"  # Remplacez YOUR_NEW_PORT par le nouveau numéro de port que vous souhaitez utiliser
+        networks:
+          mysql-phpmyadmin:
+            aliases:
+            - phpmyadmin
